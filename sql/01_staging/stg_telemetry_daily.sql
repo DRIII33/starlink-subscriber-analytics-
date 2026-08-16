@@ -37,3 +37,4 @@ SELECT
 FROM `driiiportfolio.starlink_analytics.raw_telemetry_daily`
 WHERE subscriber_id IS NOT NULL 
   AND event_date IS NOT NULL;
+
