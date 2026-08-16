@@ -11,25 +11,25 @@ SELECT
   CASE 
     WHEN avg_latency_ms < 1.0 THEN 1.0
     WHEN avg_latency_ms > 2000.0 THEN 2000.0
-    ELSE round(avg_latency_ms, 2)
+    ELSE ROUND(avg_latency_ms, 2)
   END AS avg_latency_ms,
   
   CASE 
     WHEN obstruction_rate < 0.0 THEN 0.0
     WHEN obstruction_rate > 1.0 THEN 1.0
-    ELSE round(obstruction_rate, 4)
+    ELSE ROUND(obstruction_rate, 4)
   END AS obstruction_rate,
   
   CASE 
     WHEN ping_drop_rate < 0.0 THEN 0.0
     WHEN ping_drop_rate > 1.0 THEN 1.0
-    ELSE round(ping_drop_rate, 4)
+    ELSE ROUND(ping_drop_rate, 4)
   END AS ping_drop_rate,
   
-  GREATEST(round(throughput_mbps, 2), 0.0) AS throughput_mbps,
+  GREATEST(ROUND(throughput_mbps, 2), 0.0) AS throughput_mbps,
   IFNULL(CAST(hardware_error_flag AS INT64), 0) AS hardware_error_flag,
   
-  -- Flag severe technical degradation
+  -- Flag severe technical degradation (Corresponds with our 7-day pre-churn injection anomalies)
   CASE 
     WHEN obstruction_rate > 0.035 OR ping_drop_rate > 0.05 OR hardware_error_flag = 1 
     THEN 1 ELSE 0 
