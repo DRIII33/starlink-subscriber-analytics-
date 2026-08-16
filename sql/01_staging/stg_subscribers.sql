@@ -1,5 +1,5 @@
 -- Target: driiiportfolio.starlink_analytics.stg_subscribers
--- Description: Cleaned and deduplicated staging view for subscriber entities.
+-- Description: Cleaned, deduplicated staging view for subscriber entities with fixed temporal boundaries.
 
 CREATE OR REPLACE VIEW `driiiportfolio.starlink_analytics.stg_subscribers` AS
 WITH raw_dedup AS (
@@ -30,9 +30,11 @@ SELECT
   monthly_price,
   is_active,
   churn_date,
+  -- FIXED GAP 4: Anchor tenure calculation to the fixed evaluation date instead of CURRENT_DATE()
   CASE 
     WHEN churn_date IS NOT NULL THEN DATE_DIFF(churn_date, signup_date, DAY)
-    ELSE DATE_DIFF(CURRENT_DATE(), signup_date, DAY)
+    ELSE DATE_DIFF(DATE('2026-03-31'), signup_date, DAY)
   END AS tenure_days
 FROM raw_dedup
 WHERE row_num = 1;
+
