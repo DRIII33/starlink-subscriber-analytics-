@@ -1,5 +1,5 @@
 -- Target: driiiportfolio.starlink_analytics.dim_subscriber
--- Description: Production dimensional table clustered by region and tier for BI optimization.
+-- Description: Production dimensional table clustered by region and tier for BI performance optimization.
 
 CREATE OR REPLACE TABLE `driiiportfolio.starlink_analytics.dim_subscriber`
 CLUSTER BY region_code, plan_tier AS
@@ -26,6 +26,7 @@ SELECT
     ELSE 'Emerging Market'
   END AS market_category,
   
-  -- Calculate expected baseline Customer Lifetime Value (LTV)
-  ROUND(s.monthly_price * (s.tenure_days / 30.4375), 2) AS realized_revenue_to_date
+  -- Calculate realistic Customer revenue performance metrics to date
+  ROUND(CAST(s.monthly_price AS FLOAT64) * (s.tenure_days / 30.41), 2) AS realized_revenue_to_date
 FROM `driiiportfolio.starlink_analytics.stg_subscribers` s;
+
